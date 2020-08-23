@@ -21,6 +21,7 @@ const Anecdotes = () => {
 
     const dispatch = useDispatch()
     const anecdotes = useSelector(state => state.sort(sortBlogsByVotes))
+    console.log('State now', anecdotes)
 
     return (
         <div>
