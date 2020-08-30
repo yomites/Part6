@@ -19,24 +19,33 @@ const Anecdote = ({ anecdote, handleClick }) => {
 const sortBlogsByVotes = (a, b) => b.votes - a.votes
 
 const Anecdotes = () => {
-
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state.allAnecdotes.sort(sortBlogsByVotes))
-    console.log('State now', anecdotes)
+    const timerFunction = (myFunction, time) => {
+        setTimeout(() => {
+            dispatch(myFunction())
+        }, time)
+    }
+    const allAnecdotes = useSelector(({ filter, allAnecdotes }) => {
+        if (filter === "") {
+            return allAnecdotes
+        }
+        return allAnecdotes.filter(element =>
+            element.content.toLowerCase().includes(filter.toLowerCase()))
+    })
+    const anecdotesToShow = allAnecdotes.sort(sortBlogsByVotes)
+    console.log('State now', anecdotesToShow)
 
     return (
         <div>
             {
-                anecdotes.map(anecdote =>
+                anecdotesToShow.map(anecdote =>
                     <Anecdote
                         key={anecdote.id}
                         anecdote={anecdote}
                         handleClick={() =>
                             dispatch(vote(anecdote.id),
                                 dispatch(voteChangeNotification(anecdote.content)),
-                                setTimeout(() => {
-                                    dispatch(removeNotificationMessage())
-                                }, 5000))
+                                timerFunction(removeNotificationMessage, 5000))
                         }
                     />
                 )

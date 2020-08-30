@@ -5,6 +5,11 @@ import { addNewAnecdoteNotification, removeNotificationMessage } from '../reduce
 
 const NewAnecdote = (props) => {
     const dispatch = useDispatch()
+    const timerFunction = (myFunction, time) => {
+        setTimeout(() => {
+            dispatch(myFunction())
+        }, time)
+    }
 
     const addAnecdote = (event) => {
         event.preventDefault()
@@ -15,9 +20,7 @@ const NewAnecdote = (props) => {
         }
         dispatch(createAnecdote(content))
         dispatch(addNewAnecdoteNotification(content))
-        setTimeout(() => {
-            dispatch(removeNotificationMessage())
-        }, 5000)
+        timerFunction(removeNotificationMessage, 5000)
     }
 
     return (
