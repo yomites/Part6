@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
 import { addNewAnecdoteNotification, removeNotificationMessage } from '../reducers/notificationReducer'
+import anecdoteService from '../services/anecdotes'
 
 const NewAnecdote = (props) => {
     const dispatch = useDispatch()
@@ -11,15 +12,16 @@ const NewAnecdote = (props) => {
         }, time)
     }
 
-    const addAnecdote = (event) => {
+    const addAnecdote = async (event) => {
         event.preventDefault()
         const content = event.target.anecdote.value
         event.target.anecdote.value = ''
         if (content === '') {
             return
         }
-        dispatch(createAnecdote(content))
-        dispatch(addNewAnecdoteNotification(content))
+        const newAnecdote = await anecdoteService.createNewAnecdote(content)
+        dispatch(createAnecdote(newAnecdote))
+        dispatch(addNewAnecdoteNotification(newAnecdote.content))
         timerFunction(removeNotificationMessage, 5000)
     }
 
