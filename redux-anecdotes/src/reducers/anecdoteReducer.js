@@ -9,7 +9,7 @@ const anecdoteReducer = (state = [], action) => {
       console.log('Anecdote To Vote', anecdoteToVote)
       const anecdoteAfterVote = {
         ...anecdoteToVote,
-        votes: anecdoteToVote.votes + 1
+        votes: action.data.votes
       }
       console.log('Voted Anecdote', anecdoteAfterVote)
       return state.map(anecdote =>

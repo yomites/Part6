@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { vote } from '../reducers/anecdoteReducer'
-import { voteChangeNotification, removeNotificationMessage } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 const Anecdote = ({ anecdote, handleClick }) => {
 
@@ -20,11 +20,6 @@ const sortBlogsByVotes = (a, b) => b.votes - a.votes
 
 const Anecdotes = () => {
     const dispatch = useDispatch()
-    const timerFunction = (myFunction, time) => {
-        setTimeout(() => {
-            dispatch(myFunction())
-        }, time)
-    }
 
     const allAnecdotes = useSelector(({ filter, allAnecdotes }) => {
         if (filter === "") {
@@ -45,8 +40,7 @@ const Anecdotes = () => {
                         anecdote={anecdote}
                         handleClick={() =>
                             dispatch(vote(anecdote),
-                                dispatch(voteChangeNotification(anecdote.content)),
-                                timerFunction(removeNotificationMessage, 5000))
+                            dispatch(setNotification(`You voted "${anecdote.content}"`, 5)))
                         }
                     />
                 )

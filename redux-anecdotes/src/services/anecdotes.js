@@ -18,6 +18,7 @@ const updateVote = async (id, newObject) => {
   console.log('Id12', id)
   const obj = {...newObject, votes: newObject.votes + 1}
   const response = await axios.put(`${baseUrl}/${id}`, obj)
+  console.log('Response data', response.data)
   return response.data
 }
 

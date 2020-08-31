@@ -3,10 +3,8 @@ const initialMessage = null
 const notificationReducer = (state = initialMessage, action) => {
     console.log('ACTION: ', action)
     switch (action.type) {
-      case 'SET_VOTE_MESSAGE':
-        return `you voted "${action.content}"`
       case 'SET_SUCCESS_MESSAGE':
-        return `added "${action.message}"`
+        return action.content
       case 'SET_REMOVE_MESSAGE':
         return null
       default:
@@ -14,21 +12,19 @@ const notificationReducer = (state = initialMessage, action) => {
     }
   }
 
-  export const voteChangeNotification = content => {
-    return {
-      type: 'SET_VOTE_MESSAGE',
-      content,
+  export const setNotification = (content, time) => {
+    return async dispatch => {
+      await setTimeout(() => {
+        dispatch(clearNotificationMessage())
+      }, time * 1000)
+      dispatch({
+        type: 'SET_SUCCESS_MESSAGE',
+        content,
+      })
     }
   }
 
-  export const addNewAnecdoteNotification = message => {
-    return {
-      type: 'SET_SUCCESS_MESSAGE',
-      message,
-    }
-  }
-
-  export const removeNotificationMessage = () => {
+  const clearNotificationMessage = () => {
     return {
       type: 'SET_REMOVE_MESSAGE',
     }
