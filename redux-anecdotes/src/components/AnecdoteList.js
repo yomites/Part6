@@ -25,6 +25,7 @@ const Anecdotes = () => {
             dispatch(myFunction())
         }, time)
     }
+
     const allAnecdotes = useSelector(({ filter, allAnecdotes }) => {
         if (filter === "") {
             return allAnecdotes
@@ -43,7 +44,7 @@ const Anecdotes = () => {
                         key={anecdote.id}
                         anecdote={anecdote}
                         handleClick={() =>
-                            dispatch(vote(anecdote.id),
+                            dispatch(vote(anecdote),
                                 dispatch(voteChangeNotification(anecdote.content)),
                                 timerFunction(removeNotificationMessage, 5000))
                         }
