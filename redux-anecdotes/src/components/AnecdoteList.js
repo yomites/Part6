@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import { vote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
@@ -18,29 +18,20 @@ const Anecdote = ({ anecdote, handleClick }) => {
 
 const sortBlogsByVotes = (a, b) => b.votes - a.votes
 
-const Anecdotes = () => {
-    const dispatch = useDispatch()
-
-    const allAnecdotes = useSelector(({ filter, allAnecdotes }) => {
-        if (filter === "") {
-            return allAnecdotes
-        }
-        return allAnecdotes.filter(element =>
-            element.content.toLowerCase().includes(filter.toLowerCase()))
-    })
-    const anecdotesToShow = allAnecdotes.sort(sortBlogsByVotes)
-    console.log('State now', anecdotesToShow)
+const Anecdotes = (props) => {
+    const anecdotesSortedByVotes = props.anecdotes.sort(sortBlogsByVotes)
 
     return (
         <div>
             {
-                anecdotesToShow.map(anecdote =>
+                anecdotesSortedByVotes.map(anecdote =>
                     <Anecdote
                         key={anecdote.id}
                         anecdote={anecdote}
-                        handleClick={() =>
-                            dispatch(vote(anecdote),
-                            dispatch(setNotification(`You voted "${anecdote.content}"`, 5)))
+                        handleClick=
+                        {() => {
+                            props.vote(anecdote)
+                            props.setNotification(`You voted "${anecdote.content}"`, 5)}
                         }
                     />
                 )
@@ -49,4 +40,23 @@ const Anecdotes = () => {
     )
 }
 
-export default Anecdotes
+const mapStateToProps = (state) => {
+    if (state.filter === "") {
+        return {
+            anecdotes: state.anecdotes
+        }
+    }
+
+    return {
+        anecdotes: state.anecdotes.filter(anecdote =>
+            anecdote.content.toLowerCase().includes(state.filter.toLowerCase()))
+    }
+}
+
+const mapDispatchToProps = {
+    vote, setNotification
+}
+
+const ConnectedAnecdotes = connect(mapStateToProps, mapDispatchToProps)(Anecdotes)
+
+export default ConnectedAnecdotes
